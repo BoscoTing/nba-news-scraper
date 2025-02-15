@@ -38,8 +38,15 @@ class Story(ScrapedStory, table=True):
             unique=True,
         )
     )
-
-    created_at: datetime = Field(
+    publish_at: datetime = Field(
+        default=None, 
+        sa_column=Column(
+            DateTime(timezone=True),
+            nullable=False,
+            index=True,
+        )
+    )
+    create_at: datetime = Field(
         default_factory=lambda: datetime.now(db_timezone), 
         sa_column=Column(
             DateTime(timezone=True),
