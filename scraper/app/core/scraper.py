@@ -1,9 +1,6 @@
 import time
 import random
 
-from app.core.downloader import Downloader
-from app.core.parser import StoryParser, IndexParser
-from app.core.storage import Storage
 from app.core.logger import logger
 from app.model.index import Index
 from app.model.story import StoryBase, ScrapedStory
@@ -82,30 +79,3 @@ class Scraper:
     
             current_page += 1
             index_url = self._turn_index_page(base_url=index_url, page=current_page)
-
-
-if __name__ == "__main__":
-    import json
-    from pathlib import Path
-
-    targets_path = Path(__file__).parent / "targets" / "story.json"
-    story_targets = json.loads(targets_path.read_text())
-
-    targets_path = Path(__file__).parent / "targets" / "index.json"
-    index_targets = json.loads(targets_path.read_text())
-
-    downloader = Downloader()
-    index_parser = IndexParser(targets=index_targets)
-    story_parser = StoryParser(targets=story_targets)
-    storage = Storage()
-    scraper = Scraper(
-        downloader=downloader,
-        index_parser=index_parser,
-        story_parser=story_parser,
-        storage=storage,
-    )
-    scraper.scrape_stories(
-        index_url="https://tw-nba.udn.com/nba/cate/6754/0/newest",
-        batch_count=3,
-        batch_size=3,
-    )
