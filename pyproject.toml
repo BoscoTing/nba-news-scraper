@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "oneai-mini-project"
+version = "0.1.0"
+description = ""
+authors = ["Hao Ting <boscoting0522@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+tenacity = "^9.0.0"
+requests = "^2.32.3"
+bs4 = "^0.0.2"
+lxml = "^5.3.1"
+sqlmodel = "^0.0.22"
+fake-useragent = "^2.0.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
