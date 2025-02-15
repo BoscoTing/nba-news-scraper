@@ -7,6 +7,8 @@ from tenacity import (
 )
 from fake_useragent import UserAgent
 
+from app.core.logger import logger
+
 
 class Downloader:
     def __init__(self):
@@ -28,7 +30,7 @@ class Downloader:
         try:
             return requests.get(url, headers=self._get_headers()).text
         except Exception as exc:
-            print(f"Download failed: {exc}")
+            logger.error(f"Download failed: {exc}")
             return None
 
 

@@ -9,4 +9,3 @@ class StoryPreview(SQLModel):
 
 class Index(SQLModel):
     data: list[StoryPreview]
-

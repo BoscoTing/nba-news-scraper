@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 
-from app.model.story import Story
+from app.core.logger import logger
+from app.model.story import StoryBase
 from app.model.index import Index, StoryPreview
 
 
@@ -9,7 +10,7 @@ class IndexParser:
     def __init__(self, targets: dict[str, str]):
         self.targets = targets
     
-    def parse_index(self, content: str):
+    def parse(self, content: str) -> Index:
         soup = BeautifulSoup(content, 'lxml')
 
         try:
@@ -17,14 +18,14 @@ class IndexParser:
 
             story_previews = []
             for item in url_items:
-                preview = StoryPreview(title=item['title'], url = item['href'])
+                preview = StoryPreview(title=item['title'], url=item['href'])
                 story_previews.append(preview)
-            
+
             return Index(data=story_previews)
 
         except Exception as exc:
-            print(f"Parse failed: {str(exc)}")
-            return None    
+            logger.error(f"Parse failed: {str(exc)}")
+            return None
 
 
 class StoryParser:
@@ -32,7 +33,7 @@ class StoryParser:
     def __init__(self, targets: dict[str, str]):
         self.targets = targets
 
-    def parse(self, content: str) -> Story | None:
+    def parse(self, content: str) -> StoryBase | None:
         try:
             soup = BeautifulSoup(content, 'lxml')
 
@@ -47,8 +48,8 @@ class StoryParser:
                     element = soup.select_one(selector)
                     scraped_items[key] = element.text.strip() if element else None
 
-            return Story(**scraped_items)
+            return StoryBase(**scraped_items)
 
         except Exception as exc:
-            print(f"Parse failed: {str(exc)}")
+            logger.error(f"Parse failed: {str(exc)}")
             return None
