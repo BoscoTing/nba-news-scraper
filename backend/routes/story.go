@@ -7,6 +7,9 @@ import (
 )
 
 func StoryRoute(router *gin.Engine) {
+	router.GET("/", func(c *gin.Context) {
+		c.Redirect(301, "/index/1")
+	})
 	router.GET("/index/", func(c *gin.Context) {
 		c.Redirect(301, "/index/1")
 	})
