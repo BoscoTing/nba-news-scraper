@@ -8,6 +8,8 @@ import (
 )
 
 func main() {
+	gin.SetMode(gin.ReleaseMode)
+
 	router := gin.Default()
 	router.LoadHTMLGlob("asset/*.html")
 	router.Static("/asset", "asset")
