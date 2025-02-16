@@ -2,7 +2,9 @@ name: Deploy to AWS
 
 on:
   push:
-    branches: [ chore/github-actions ]
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -30,7 +32,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/OneAI-mini-project
-            git pull origin chore/github-actions
+            git pull origin main
             
             # Update and restart scraper
             cd ~/OneAI-mini-project/scraper
