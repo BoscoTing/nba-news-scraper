@@ -203,3 +203,6 @@ go.work.sum
 
 # env file
 .env
+
+# AWS EC2 connection key
+*.pem
