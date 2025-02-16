@@ -2,8 +2,6 @@ package models
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type StoryListPublic struct {
@@ -21,7 +19,6 @@ type StoryDetailPublic struct {
 }
 
 type Story struct {
-	gorm.Model
 	Id        int       `gorm:"column:id"`
 	Title     string    `gorm:"column:title"`
 	Content   string    `gorm:"column:content"`
