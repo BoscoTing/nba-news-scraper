@@ -1,0 +1,5 @@
+{
+    "title": "h1.story_art_title",
+    "content": "#story_body_content p",
+    "publish_at": ".shareBar__info--author span"
+}
