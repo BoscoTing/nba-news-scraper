@@ -31,16 +31,8 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
         run: |
-          mkdir -p ~/.ssh
-          # Write key file with proper format
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/deploy_key || {
-            echo "Failed to add SSH key"
-            exit 1
-          }
-          echo -e "Host server\n\tHostName $SSH_HOST\n\tUser $SSH_USER\n\tIdentityFile ~/.ssh/deploy_key\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile=/dev/null" > ~/.ssh/config
+          echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${SSH_USER}@${SSH_HOST}
 
       - name: Deploy and Restart Services
         env:
