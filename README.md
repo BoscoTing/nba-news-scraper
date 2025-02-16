@@ -60,13 +60,19 @@ graph TB
     ```
 
 2. Set up environment variables:
-Create a `.env` file in the root directory, /scraper/ and /backend/ with the following content:
+    Create a `.env` file in the root directory, /scraper/ and /backend/ with the following content:
 
     ```env
     POSTGRES_DB=your_db_name
     POSTGRES_USER=your_user
     POSTGRES_PASSWORD=your_password
     POSTGRES_PORT=5432
+    ```
+
+    For the `.env` file in /scraper/, add one more variable:
+
+    ```env
+    INDEX_URL="https://tw-nba.udn.com/nba/cate/6754/0/newest"
     ```
 
 3. Start the database:
