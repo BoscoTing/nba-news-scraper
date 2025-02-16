@@ -31,10 +31,12 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
         run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          echo -e "Host server\n\tHostName $SSH_HOST\n\tUser $SSH_USER\n\tIdentityFile ~/.ssh/deploy_key\n\tStrictHostKeyChecking no" > ~/.ssh/config
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/deploy_key
+          echo -e "Host server\n\tHostName $SSH_HOST\n\tUser $SSH_USER\n\tIdentityFile ~/.ssh/deploy_key\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile=/dev/null" > ~/.ssh/config
 
       - name: Deploy and Restart Services
         env:
