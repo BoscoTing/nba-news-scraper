@@ -22,7 +22,7 @@
           <header class="mb-4">
             <h1 class="text-body-emphasis">{{.storyDetail.Title}}</h1>
             <div class="text-muted">
-              Published on {{.storyDetail.PublishAt.Format "January 2, 2006"}}
+              Published on {{.storyDetail.PublishedAt.Format "January 2, 2006"}}
               {{if .storyDetail.Url}}
               &middot; <a href="{{.storyDetail.Url}}" target="_blank" class="text-decoration-none">Original Source</a>
               {{end}}

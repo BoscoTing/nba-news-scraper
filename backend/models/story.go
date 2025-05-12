@@ -7,14 +7,14 @@ import (
 type StoryListPublic struct {
 	Id        int       `json:"id"`
 	Title     string    `json:"title"`
-	PublishAt time.Time `json:"publish_at"`
+	PublishedAt time.Time `json:"published_at"`
 }
 
 type StoryDetailPublic struct {
 	Id        int       `json:"id"`
 	Title     string    `json:"title"`
 	Content   string    `json:"content"`
-	PublishAt time.Time `json:"publish_at"`
+	PublishedAt time.Time `json:"published_at"`
 	Url       string    `json:"url"`
 }
 
@@ -23,8 +23,8 @@ type Story struct {
 	Title     string    `gorm:"column:title"`
 	Content   string    `gorm:"column:content"`
 	Url       string    `gorm:"column:url"`
-	PublishAt time.Time `gorm:"column:publish_at"`
-	CreateAt  time.Time `gorm:"column:create_at"`
+	PublishedAt time.Time `gorm:"column:published_at"`
+	CreatedAt  time.Time `gorm:"column:create_at"`
 }
 
 func (Story) TableName() string {
