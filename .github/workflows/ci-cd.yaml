@@ -1,13 +1,57 @@
-name: Deploy to AWS
+name: CI/CD Pipeline
 
 on:
   pull_request:
     branches: [ main ]
+  push:
+    branches: [ main, test/ci-cd]
   workflow_dispatch:
 
 jobs:
-  deploy:
+  ci:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+          cache-dependency-path: backend/go.sum
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      # Python CI steps
+      - name: Install Python dependencies
+        run: |
+          cd scraper
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov black flake8
+
+      - name: Run Python tests
+        run: |
+          cd scraper
+          pytest tests/ --cov=app --cov-report=xml
+
+      # Go CI steps
+      - name: Install Go dependencies
+        run: |
+          cd backend
+          go mod download
+
+      - name: Run Go tests
+        run: |
+          cd backend
+          go test -v ./...
+
+  cd:
+    needs: ci  # Only run CD if CI passes
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'  # Only deploy on main branch pushes
     steps:
       - uses: actions/checkout@v3
 
