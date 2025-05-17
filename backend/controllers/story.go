@@ -21,7 +21,7 @@ func GetStoryList(c *gin.Context) {
 
 	storyList := []models.StoryListPublic{}
 
-	config.DB.Model(&models.Story{}).Order("publish_at DESC").Limit(10).Offset(offset).Find(&storyList)
+	config.DB.Model(&models.Story{}).Order("published_at DESC").Limit(10).Offset(offset).Find(&storyList)
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"storyList": storyList,
 	})

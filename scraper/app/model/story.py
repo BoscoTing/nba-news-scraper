@@ -12,7 +12,7 @@ db_timezone = ZoneInfo('UTC')
 class StoryBase(SQLModel):
     title: str
     content: str
-    publish_at: datetime
+    published_at: datetime
 
 
 class ScrapedStory(StoryBase):
@@ -38,7 +38,7 @@ class Story(ScrapedStory, table=True):
             unique=True,
         )
     )
-    publish_at: datetime = Field(
+    published_at: datetime = Field(
         default=None, 
         sa_column=Column(
             DateTime(timezone=True),
@@ -46,7 +46,7 @@ class Story(ScrapedStory, table=True):
             index=True,
         )
     )
-    create_at: datetime = Field(
+    created_at: datetime = Field(
         default_factory=lambda: datetime.now(db_timezone), 
         sa_column=Column(
             DateTime(timezone=True),
