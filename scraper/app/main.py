@@ -1,20 +1,21 @@
-import json
-from pathlib import Path
+from datetime import datetime
 
 from app.config import settings
 from app.core.downloader import Downloader
 from app.core.parser import StoryParser, IndexParser
 from app.core.storage import Storage
 from app.core.scraper import Scraper
+from app.core.scheduler import scheduler
+from app.core.utils import load_targets
 
-
-
+@scheduler.scheduled_job(
+    'interval',
+    minutes=1,
+    next_run_time=datetime.now(),
+)
 def main() -> None:
-    targets_path = Path(__file__).parent / "core" / "targets" / "story.json"
-    story_targets = json.loads(targets_path.read_text())
-
-    targets_path = Path(__file__).parent / "core" / "targets" / "index.json"
-    index_targets = json.loads(targets_path.read_text())
+    story_targets = load_targets("story.json")
+    index_targets = load_targets("index.json")
 
     downloader = Downloader()
     index_parser = IndexParser(targets=index_targets)
@@ -28,10 +29,13 @@ def main() -> None:
     )
     scraper.scrape_stories(
         index_url=settings.INDEX_URL,
-        batch_size=500,
-        batch_count=200,
+        batch_size=30,
+        batch_count=10,
     )
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        scheduler.start()
+    except (KeyboardInterrupt, SystemExit):
+        scheduler.shutdown()

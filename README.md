@@ -118,7 +118,7 @@ Response:
     {
       "id": "string",
       "title": "string",
-      "publish_at": "datetime"
+      "published_at": "datetime"
     }
   ]
 }
@@ -141,7 +141,7 @@ Response:
     "title": "string",
     "content": "string",
     "url": "string",
-    "publish_at": "datetime"
+    "published_at": "datetime"
   }
 }
 ```

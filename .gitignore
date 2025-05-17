@@ -206,3 +206,6 @@ go.work.sum
 
 # AWS EC2 connection key
 *.pem
+
+# MacOS
+.DS_Store
