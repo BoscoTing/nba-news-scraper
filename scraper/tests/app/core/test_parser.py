@@ -1,9 +1,11 @@
 from pathlib import Path
+from datetime import datetime
 
 import pytest
 
-from app.core.parser import IndexParser
+from app.core.parser import IndexParser, StoryParser
 from app.model.index import Index, StoryPreview
+from app.model.story import StoryBase
 from app.core.utils import load_targets
 
 
@@ -47,3 +49,43 @@ class TestIndexParser:
         result = parser.parse("<invalid>html</invalid>")
         assert isinstance(result, Index)
         assert len(result.data) == 0
+
+
+class TestStoryParser:
+    @pytest.fixture
+    def parser(self):
+        story_targets = load_targets("story.json")
+        return StoryParser(targets=story_targets)
+
+
+    def test_parse_successful(self, parser):
+        # Load the mock story page
+        mock_story_html = load_mock_data('sample_story.html')
+        
+        result = parser.parse(mock_story_html)
+        
+        assert result is not None
+        assert isinstance(result, StoryBase)
+        
+        assert result.title is not None
+        assert isinstance(result.title, str)
+        assert len(result.title) > 0
+        assert "NBA" in result.title
+        
+        assert result.published_at is not None
+        assert isinstance(result.published_at, datetime)
+        assert "2025-05-17 14:59:00" in result.published_at.strftime("%Y-%m-%d %H:%M:%S")
+        
+        assert result.content is not None
+        assert isinstance(result.content, str)
+        assert len(result.content) > 0
+        assert "尼克" in result.content
+        assert "布朗森" in result.content
+
+    def test_parse_empty_content(self, parser):
+        result = parser.parse("")
+        assert result is None
+
+    def test_parse_invalid_html(self, parser):
+        result = parser.parse("<invalid>html</invalid>")
+        assert result is None
