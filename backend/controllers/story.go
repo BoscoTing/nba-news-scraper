@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetStoryList(c *gin.Context) {
+func getPage(c *gin.Context) int {
 	pageStr := c.Param("page")
 	page := 1
 	if pageStr != "" {
@@ -17,10 +17,17 @@ func GetStoryList(c *gin.Context) {
 			page = p
 		}
 	}
-	offset := (page - 1) * 10
+	return page
+}
 
+func getOffset(page int) int {
+	return (page - 1) * 10
+}
+
+func GetStoryList(c *gin.Context) {
+	page := getPage(c)
+	offset := getOffset(page)
 	storyList := []models.StoryListPublic{}
-
 	config.DB.Model(&models.Story{}).Order("published_at DESC").Limit(10).Offset(offset).Find(&storyList)
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"storyList": storyList,
