@@ -1,6 +1,4 @@
-import json
 from datetime import datetime
-from pathlib import Path
 
 from app.config import settings
 from app.core.downloader import Downloader
@@ -8,7 +6,7 @@ from app.core.parser import StoryParser, IndexParser
 from app.core.storage import Storage
 from app.core.scraper import Scraper
 from app.core.scheduler import scheduler
-
+from app.core.utils import load_targets
 
 @scheduler.scheduled_job(
     'interval',
@@ -16,11 +14,8 @@ from app.core.scheduler import scheduler
     next_run_time=datetime.now(),
 )
 def main() -> None:
-    targets_path = Path(__file__).parent / "core" / "targets" / "story.json"
-    story_targets = json.loads(targets_path.read_text())
-
-    targets_path = Path(__file__).parent / "core" / "targets" / "index.json"
-    index_targets = json.loads(targets_path.read_text())
+    story_targets = load_targets("story.json")
+    index_targets = load_targets("index.json")
 
     downloader = Downloader()
     index_parser = IndexParser(targets=index_targets)
