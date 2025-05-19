@@ -84,7 +84,7 @@ jobs:
             
             # Update and restart scraper
             cd ~/OneAI-mini-project/scraper
-            source venv/bin/activate
+            source .venv/bin/activate
             pip install -r requirements.txt
             
             # Update and restart backend
