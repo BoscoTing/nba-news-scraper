@@ -20,11 +20,13 @@ graph TB
         subgraph Docker Container
             DB[(PostgreSQL)]
         end
-        Scraper[Python Scraper]
+        Scraper[Python Scraper<br/>with APScheduler]
     end
 
     Client[Web Browser] -->|HTTP Request| API
     API -->|JSON Response| Client
+
+    GitHub[GitHub Actions] -->|CI/CD| AWS
 ```
 
 ## Tech Stack
