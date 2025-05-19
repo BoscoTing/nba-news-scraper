@@ -25,14 +25,13 @@ class Downloader:
         stop=stop_after_attempt(3),
         wait=wait_exponential(multiplier=1, min=2, max=10),
         retry=retry_if_exception_type(requests.exceptions.RequestException),
+        reraise=True,
     )
     def download(self, url: str) -> str | None:
-        try:
-            return requests.get(url, headers=self._get_headers()).text
-        except Exception as exc:
-            logger.error(f"Download failed: {exc}")
-            return None
+        return requests.get(url, headers=self._get_headers()).text
 
 
-downloader = Downloader()
-text = downloader.download(url="https://tw-nba.udn.com/nba/story/7002/8549781")
+if __name__ == "__main__":
+    downloader = Downloader()
+    text = downloader.download(url="https://tw-nba.udn.com/nba/story/7002/8549781")
+    print(text)
