@@ -5,10 +5,9 @@ on:
     branches:
       - main
       - develop
+      - '**'
   pull_request:
     branches:
-      - 'cd'
-      - '*'
       - '**'      # matches every branch containing a single '/'
       - '!main'   # excludes master
 
