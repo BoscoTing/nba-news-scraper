@@ -2,10 +2,6 @@
 
 A web scraping and news display system that collects NBA news from UDN Sports (tw-nba.udn.com) and presents them through a clean web interface.
 
-## Demo
-
-https://github.com/user-attachments/assets/3273d380-45d1-4a54-8ac7-aed2702c3198
-
 ## Architecture
 
 ```mermaid
