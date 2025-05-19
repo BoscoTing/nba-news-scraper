@@ -2,10 +2,6 @@
 
 A web scraping and news display system that collects NBA news from UDN Sports (tw-nba.udn.com) and presents them through a clean web interface.
 
-## Demo
-
-https://github.com/user-attachments/assets/3273d380-45d1-4a54-8ac7-aed2702c3198
-
 ## Architecture
 
 ```mermaid
@@ -20,11 +16,13 @@ graph TB
         subgraph Docker Container
             DB[(PostgreSQL)]
         end
-        Scraper[Python Scraper]
+        Scraper[Python Scraper<br/>with APScheduler]
     end
 
     Client[Web Browser] -->|HTTP Request| API
     API -->|JSON Response| Client
+
+    GitHub[GitHub Actions] -->|CI/CD| AWS
 ```
 
 ## Tech Stack
