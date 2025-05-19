@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+      - '**'
   pull_request:
     branches:
       - '**'      # matches every branch containing a single '/'
@@ -75,6 +76,8 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          debug: true
+          use_insecure_cipher: true
           script: |
             cd ~/OneAI-mini-project
             git pull origin main
