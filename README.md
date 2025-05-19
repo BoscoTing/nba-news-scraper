@@ -1,10 +1,10 @@
 # NBA News Scraper
 
-A web scraping and news display system that collects NBA news from UDN Sports (tw-nba.udn.com) and presents them through a modern web interface.
+A web scraping and news display system that collects NBA news from UDN Sports (tw-nba.udn.com) and presents them through a clean web interface.
 
 ## Demo
 
-You can try the live demo at: http://18.182.47.208:8080
+https://github.com/user-attachments/assets/3273d380-45d1-4a54-8ac7-aed2702c3198
 
 ## Architecture
 
