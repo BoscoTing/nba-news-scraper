@@ -54,7 +54,7 @@ jobs:
   cd:
     needs: ci  # Only run CD if CI passes
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/cd'
     steps:
       - uses: actions/checkout@v3
 
