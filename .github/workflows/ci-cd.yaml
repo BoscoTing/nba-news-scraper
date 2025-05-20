@@ -3,12 +3,11 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main
-      - develop
+      - '**'
   pull_request:
     branches:
-      - '**'      # matches every branch containing a single '/'
-      - '!main'   # excludes master
+      - main
+      - develop
 
   workflow_dispatch:
 
