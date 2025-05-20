@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, date
+import argparse
 
 from app.config import settings
 from app.core.downloader import Downloader
@@ -13,7 +14,10 @@ from app.core.utils import load_targets
     minutes=1,
     next_run_time=datetime.now(),
 )
-def main() -> None:
+def main(specified_date: date | None = None) -> None:
+    BATCH_SIZE = 30
+    BATCH_COUNT = 10
+
     story_targets = load_targets("story.json")
     index_targets = load_targets("index.json")
 
@@ -29,13 +33,22 @@ def main() -> None:
     )
     scraper.scrape_stories(
         index_url=settings.INDEX_URL,
-        batch_size=30,
-        batch_count=10,
+        batch_size=BATCH_SIZE,
+        batch_count=BATCH_COUNT,
+        specified_date=specified_date,
     )
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Run the scraper with optional date parameter')
+    parser.add_argument('--no-date', action='store_true', help='Run without specifying a date')
+    args = parser.parse_args()
+    
     try:
+        if args.no_date:
+            main()
+        else:
+            main(specified_date=date.today())
         scheduler.start()
     except (KeyboardInterrupt, SystemExit):
         scheduler.shutdown()

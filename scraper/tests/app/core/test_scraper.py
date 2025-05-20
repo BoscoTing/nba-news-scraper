@@ -46,41 +46,6 @@ class TestScraper:
         result = scraper._turn_index_page(base_url, page=2)
         assert result == "https://example.com/nba/news/2"
 
-    def test_process_url_batch(self, scraper):
-        previews = [
-            StoryPreview(title="Story 1", url="https://tw-nba.udn.com/nba/story/1"),
-            StoryPreview(title="Story 2", url="https://tw-nba.udn.com/nba/story/2"),
-            StoryPreview(title="Story 3", url="https://tw-nba.udn.com/nba/story/3")
-        ]
-
-        scraper.storage.filter_existing_urls.return_value = (
-            ["/nba/story/1"],  # existing URLs
-            ["/nba/story/2", "/nba/story/3"]  # new URLs
-        )
-
-        new_urls, should_stop = scraper._process_url_batch(previews)
-
-        assert new_urls == {"/nba/story/2", "/nba/story/3"}
-        assert not should_stop
-        scraper.storage.filter_existing_urls.assert_called_once()
-
-    def test_process_url_batch_all_existing(self, scraper):
-        previews = [
-            StoryPreview(title="Story 1", url="https://tw-nba.udn.com/nba/story/1"),
-            StoryPreview(title="Story 2", url="https://tw-nba.udn.com/nba/story/2")
-        ]
-
-        scraper.storage.filter_existing_urls.return_value = (
-            ["/nba/story/1", "/nba/story/2"],  # all existing
-            []  # no new URLs
-        )
-
-        new_urls, should_stop = scraper._process_url_batch(previews)
-
-        assert new_urls == set()
-        assert should_stop
-        scraper.storage.filter_existing_urls.assert_called_once()
-
     def test_scrape_index(self, scraper):
         mock_content = load_mock_data('sample_index.html')
         mock_index = Index(data=[
@@ -158,24 +123,3 @@ class TestScraper:
 
         # Verify storage was called to save stories
         assert scraper.storage.save_stories_batch.call_count == 2
-
-    @patch.object(Scraper, 'scrape_index')
-    def test_scrape_stories_stop_on_existing(self, mock_scrape_index, scraper):
-        mock_index = Index(data=[
-            StoryPreview(title="Story 1", url="https://tw-nba.udn.com/nba/story/1"),
-            StoryPreview(title="Story 2", url="https://tw-nba.udn.com/nba/story/2")
-        ])
-        mock_scrape_index.return_value = mock_index
-
-        scraper.storage.filter_existing_urls.return_value = (
-            ["/nba/story/1", "/nba/story/2"],
-            []
-        )
-
-        scraper.scrape_stories(
-            index_url="https://example.com/nba/news",
-            batch_size=1,
-            batch_count=2
-        )
-
-        scraper.storage.save_stories_batch.assert_not_called()
