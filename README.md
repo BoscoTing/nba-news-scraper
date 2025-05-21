@@ -35,7 +35,7 @@ graph TB
 ## Features
 
 - Automated web scraping of NBA news from UDN Sports
-- RESTful API for news retrieval
+- API for news retrieval
 - PostgreSQL database for data persistence
 - Containerized deployment with Docker
 - Environment-based configuration
