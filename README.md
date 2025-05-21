@@ -54,7 +54,7 @@ graph TB
 
     ```bash
     git clone <repository-url>
-    cd OneAI-mini-project
+    cd nba-news-scraper
     ```
 
 2. Set up environment variables:
