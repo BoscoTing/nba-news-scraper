@@ -1,8 +1,8 @@
 import time
 import random
-
+from datetime import date
 from app.core.logger import logger
-from app.model.index import Index, StoryPreview
+from app.model.index import Index
 from app.model.story import StoryBase, ScrapedStory
 
 
@@ -22,27 +22,10 @@ class Scraper:
     def _sleep_randomly(self) -> None:
         time.sleep(random.uniform(0.1, 0.5))
     
-    def _turn_index_page(self, base_url: str, page: int = 1) -> list[str]:
+    def _turn_index_page(self, base_url: str, page: int = 1) -> str:
         if base_url.split("/")[-1].isdigit():
             base_url = "/".join(base_url.split("/")[:-1])
         return base_url + "/" + str(page)
-
-    def _process_url_batch(self, story_previews: list[StoryPreview]) -> tuple[set[str], bool]:
-        """
-        Process a batch of URLs, checking which ones exist in the database.
-        Returns a tuple of (new_urls_set, should_stop)
-        """
-        urls_to_check = [str(preview.url) for preview in story_previews]
-        existing_urls, new_urls = self.storage.filter_existing_urls(urls_to_check)
-        
-        should_stop = len(existing_urls) == len(urls_to_check)
-        
-        if should_stop:
-            logger.info("All URLs in this batch already exist in database. Stopping.")
-        else:
-            logger.info(f"Found {len(new_urls)} new URLs to process")
-        
-        return set(new_urls), should_stop
 
     def scrape_index(self, url: str) -> Index:
         content = self.downloader.download(url)
@@ -61,13 +44,17 @@ class Scraper:
             )
             return scraped_story
         return None
+    
+    def _stop_at_date(self, stories: list[StoryBase], specified_date: date) -> bool:
+        return all(story.published_at.date() < specified_date for story in stories)
 
     def scrape_stories(
         self,
         index_url: str,
         batch_size: int,
-        batch_count: int
-    ) -> list[StoryBase]:
+        batch_count: int,
+        specified_date: date | None = None,
+    ) -> None:
         """Scrape multiple urls"""
         current_page = 1
         current_batch = 1
@@ -77,26 +64,29 @@ class Scraper:
         while current_batch <= batch_count:
             index = self.scrape_index(url=index_url)
             story_previews = index.data
-            
-            new_urls, should_stop = self._process_url_batch(story_previews)
-            
-            if should_stop:
-                break
-                
-            story_urls.update(new_urls)
+
+            for story_preview in story_previews:
+                story_urls.add(story_preview.url)
 
             while story_urls:
                 story_url = story_urls.pop()
                 story = self.scrape_story(url=story_url)
-                logger.debug(f"Scraped: {story_url}, Title: {story.title}")
-                logger.debug(f"Batch: {current_batch}, Page: {current_page}, Story count: {len(stories)}")
 
                 if story:
+                    logger.debug(f"Scraped: {story_url}, Title: {story.title}")
+                    logger.debug(f"Batch: {current_batch}, Page: {current_page}, Story count: {len(stories)}")
                     stories.append(story)
+
+
                 if len(stories) >= batch_size:
                     self.storage.save_stories_batch(stories)
                     stories = []
                     current_batch += 1
+
+            if specified_date and self._stop_at_date(stories=stories, specified_date=specified_date):
+                logger.info("All stories before the specified date have been scraped. Stopping.")
+                break
     
             current_page += 1
             index_url = self._turn_index_page(base_url=index_url, page=current_page)
+            story_urls = set()  
