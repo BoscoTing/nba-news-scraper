@@ -58,7 +58,7 @@ graph TB
     ```
 
 2. Set up environment variables:
-    Create a `.env` file in the root directory, /scraper/ and /backend/ with the following content:
+    Create a `.env` file in the root directory with the following content:
 
     ```env
     POSTGRES_DB=your_db_name
@@ -67,33 +67,10 @@ graph TB
     POSTGRES_PORT=5432
     ```
 
-    For the `.env` file in /scraper/, add one more variable:
-
-    ```env
-    INDEX_URL="https://tw-nba.udn.com/nba/cate/6754/0/newest"
-    ```
-
-3. Start the database:
+3. Start all services using Docker Compose:
 
     ```bash
-    docker-compose up -d
-    ```
-
-4. Set up the scraper:
-
-    ```bash
-    cd scraper
-    python -m venv venv
-    source venv/bin/activate
-    pip install -r requirements.txt
-    ```
-
-5. Start the backend server:
-
-    ```bash
-    cd backend
-    go mod download
-    go run main.go
+    docker compose up -d
     ```
 
 ## API Documentation
