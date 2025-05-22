@@ -75,7 +75,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd ~/OneAI-mini-project
+            cd ~/nba-news-scraper
             git pull origin main
             
             # Pull latest images and restart containers
