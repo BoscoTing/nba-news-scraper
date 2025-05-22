@@ -7,7 +7,7 @@ services:
         - POSTGRES_DB=${POSTGRES_DB}
         - POSTGRES_USER=${POSTGRES_USER}
         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    container_name: OneAI-db
+    container_name: nba-db
     env_file:
       - .env
     volumes:
@@ -28,7 +28,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: OneAI-api
+    container_name: nba-api
     env_file:
       - .env
     volumes:
@@ -50,7 +50,7 @@ services:
     build:
       context: ./scraper
       dockerfile: Dockerfile
-    container_name: OneAI-scraper
+    container_name: nba-scraper
     env_file:
       - .env
     volumes:
